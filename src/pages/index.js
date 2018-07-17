@@ -21,10 +21,13 @@ class Index extends Component {
     } = this.props;
     switch(id){
       case 1:
-        history.push(routes.IMG)
+        history.push(routes.IMG);
         break;
       case 2:
-        history.push(routes.DATA)
+        history.push(routes.DATA);
+        break;
+      case 3:
+        history.push(routes.ORDER);
         break;
     }
   }
@@ -37,6 +40,12 @@ class Index extends Component {
 
       return (
         <Layout title="Choose a way" islog={this.props.islog} >
+           <div className="mar btns" onClick={(e) => this.moveto(3, e)}>
+              <div className="uk-card uk-card-hover uk-card-primary uk-card-body news">
+                  <h3 className="uk-card-title">Orders</h3>
+                  <p>Here You can upload the Excel sheet which contains the information about the different Products.</p>
+              </div>
+           </div>
            <div className="mar btns" onClick={(e) => this.moveto(1, e)}>
               <div className="uk-card uk-card-primary uk-card-hover uk-card-body">
                   <h3 className="uk-card-title">Upload Images</h3>
@@ -49,6 +58,7 @@ class Index extends Component {
                   <p>Here You can upload the Excel sheet which contains the information about the different Products.</p>
               </div>
            </div>
+           
            <style jsx="true">{`
                  .mar {
                     margin: 1%;

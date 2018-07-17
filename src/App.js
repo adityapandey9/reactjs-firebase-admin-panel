@@ -9,6 +9,7 @@ import Index from './pages/index';
 import UploadImg from './pages/uploadimg';
 import UploadData from './pages/uploaddata';
 import Login from './pages/login';
+import OrderPage from './pages/order';
 
 import * as routes from './const/routes';
 import { firebase } from './firebase/index';
@@ -50,6 +51,10 @@ class App extends Component {
           <Route
             exact path={routes.IMG}
             component={() => <UploadImg islog={this.state.authUser} />}
+          />
+          <Route
+            exact path={routes.ORDER}
+            component={() => <OrderPage islog={this.state.authUser} />}
           />
         </div>
       </Router>

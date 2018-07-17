@@ -22,6 +22,7 @@ class UploadData extends Component {
             done: 0,
             total: 0
         }
+        // console.log(this.props.location)
     }
 
     handleChange(e){
@@ -57,29 +58,39 @@ class UploadData extends Component {
 			/* Convert array of arrays */
             const data = XLSX.utils.sheet_to_json(ws, {header:1});
             // console.log("Data: ", data)
-            let mdata = [];
             let lens = (data.length-1)
             this.setState({total: lens})
-            for(let i=1;i<data.length;i++){
-                let obj = {}
-                if(data[i].length < data[0].length){
-                    continue;
+            databaseRef.ref("/posts").once("value", (res)=>{
+                let mdata = {};
+                let ind = parseInt(res.val());
+                console.log("Val: ", ind)
+                for(let i=1;i<data.length;i++){
+                    let obj = {}
+                    if(data[i].length < data[0].length){
+                        continue;
+                    }
+                    for(let j=0;j<data[i].length;j++){
+                       obj = Object.assign(obj, {[data[0][j].toLowerCase()]: this.isJSON(data[i][j]) ? JSON.parse(data[i][j]): data[i][j]});
+                    }
+                    // console.log("Data: ", obj);
+                    // let keys = ""+ind;
+                    mdata[""+ind] = obj;
+                    ++ind;
                 }
-                for(let j=0;j<data[i].length;j++){
-                   obj = Object.assign(obj, {[data[0][j].toLowerCase()]: this.isJSON(data[i][j]) ? JSON.parse(data[i][j]): data[i][j]});
-                }
-                // console.log("Data: ", obj);
-                mdata.push(obj);
-            }
-            // console.log("M: ", mdata)
-            databaseRef.ref(`${this.basePath}`).push().set(mdata).then((val)=>{
-                console.log("Val f: ", val);
-                if(val === undefined){
-                    this.setState({progress: 100, done: lens, curr: 100});
-                }
-            }).catch((err)=>{
+                // console.log("M: ", mdata)
+                databaseRef.ref(`${this.basePath}`).update(mdata).then((val)=>{
+                    // console.log("Val f: ", val);
+                    if(val === undefined){
+                        this.setState({progress: 100, done: lens, curr: 100});
+                    }
+                }).catch((err)=>{
+                    this.setState({err: err});
+                })
+            }, (err)=>{
                 this.setState({err: err});
             })
+
+            
 		};
     }
 
